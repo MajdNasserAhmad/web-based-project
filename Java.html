@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/Java.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Java Script</title>
+</head>
+<body style="background-color: #000; color: #fff;">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <ul class="navbar-nav">
+                <li><a href="/html/index.html">Home</a></li>
+                <li><a href="/html/about.html">About Us</a></li>
+                <li><a href="/html/products.html">Products/Services</a></li>
+                <li><a href="/html/contact.html">Contact Us</a></li>
+                <li><a href="/html/testimonials.html">Testimonials</a></li>
+                <li><a href="/html/sitemap.html">Sitemap</a></li>
+                <li><a href="/html/Java.html">Java Script</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <form id="coffeeOrderForm" onsubmit="return submitForm(event)">
+            <label for="customerName">Name:</label>
+            <input type="text" id="customerName">
+            <span id="customerNameError" class="error"></span><br>
+
+            <label>Coffee Preferences:</label>
+            <select id="coffeeType">
+                <option value="americano">Americano</option>
+                <option value="cappuccino">Cappuccino</option>
+                <option value="macchiato">Macchiato</option>
+                <option value="espresso">Espresso</option>
+            </select>
+            <span id="coffeeTypeError" class="error"></span><br>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity">
+            <span id="quantityError" class="error"></span><br>
+
+            <label>Sugar Level:</label>
+            <input type="radio" id="sugarLow" name="sugarLevel" value="low"> Low
+            <input type="radio" id="sugarMedium" name="sugarLevel" value="medium"> Medium
+            <input type="radio" id="sugarHigh" name="sugarLevel" value="high"> High
+            <span id="sugarLevelError" class="error"></span><br>
+
+            <label>Extras:</label>
+            <input type="checkbox" id="extraCream" name="extraCream" value="cream"> Cream
+            <input type="checkbox" id="extraChocolate" name="extraChocolate" value="chocolate"> Chocolate
+            <input type="checkbox" id="none" name="none" value="none"> None
+            <span id="extrasError" class="error"></span><br>
+
+            <input type="submit" value="Place Order">
+        </form>
+        <div id="orderDetails">
+            <h2>Order Details</h2>
+            <textarea id="orderSummary" readonly>Date and Time: <span id="dateTime"></span></textarea>
+        </div>
+    </section>
+    <footer class="fixed-bottom">
+        <div>
+            <b class="footer-content">&copy; 2023 Coffee Shop. All rights reserved.</b>
+        </div>
+        <div class="social-media">
+            <a href="#" class="fa fa-instagram"></a>
+            <a href="#" class="fa fa-facebook"></a>
+            <a href="#" class="fa fa-twitter"></a>
+            <a href="#" class="fa fa-snapchat-ghost"></a>
+        </div>
+    </footer>
+
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            return now.toLocaleString();
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            document.querySelectorAll('.error').forEach(element => element.textContent = '');
+            const customerName = document.getElementById('customerName').value;
+            const coffeeType = document.getElementById('coffeeType').value;
+            const quantity = document.getElementById('quantity').value;
+            const sugarLevel = document.querySelector('input[name="sugarLevel"]:checked');
+            const extraCream = document.getElementById('extraCream');
+            const extraChocolate = document.getElementById('extraChocolate');
+            const none = document.getElementById('none');
+
+            document.querySelectorAll('.error').forEach(errorElement => errorElement.textContent = '');
+
+            let isValid = true;
+
+            if (customerName.trim() == '') {
+                document.getElementById('customerNameError').textContent = 'Name is required';
+                isValid = false;
+            }
+
+            if (isNaN(quantity) || quantity <= 0) {
+                document.getElementById('quantityError').textContent = 'Invalid quantity';
+                isValid = false;
+            }
+
+            if (!sugarLevel) {
+                document.getElementById('sugarLevelError').textContent = 'Please select a sugar level';
+                isValid = false;
+            }
+
+            if (!extraCream.checked && !extraChocolate.checked && !none.checked) {
+                document.getElementById('extrasError').textContent = 'Select at least one extra';
+                isValid = false;
+            }
+
+            let totalPrice = calculateTotalPrice();
+            let discount = 0.00;
+
+            if (quantity >= 3) {
+                discount = 0.1;
+            }
+
+            let finalPrice = totalPrice - (totalPrice * discount);
+
+            document.getElementById('orderSummary').value = `Date and Time: ${updateDateTime()}\n\nName: ${customerName}\nCoffee Type: ${coffeeType}\nQuantity: ${quantity}\nSugar Level: ${sugarLevel.value}\nExtras: ${extraCream.checked ? extraCream.value + ', ' : ''}${extraChocolate.checked ? extraChocolate.value +', ': ''}${none.checked ? none.value :' '}\n\nTotal Price: $${totalPrice.toFixed(2)}\nDiscount: $${(totalPrice * discount).toFixed(2)}\nFinal Price: $${finalPrice.toFixed(2)}`;
+
+            if (isValid) {
+                document.getElementById('orderDetails').style.display = 'block';
+            }
+            return isValid;
+        }
+
+        function calculateTotalPrice() {
+            const coffeeType = document.getElementById('coffeeType').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            let price = 0.00;
+
+            switch (coffeeType) {
+                case 'americano':
+                    price = 2.99;
+                    break;
+                case 'cappuccino':
+                    price = 3.49;
+                    break;
+
+                default:
+                    price = 2.99;
+                    break;
+            }
+
+            return price * quantity;
+        }
+    </script>
+</body>
+</html>

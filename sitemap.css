@@ -1,0 +1,14 @@
+body{
+    background: url('/images/sitemap.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: #000;
+}
+
+footer {
+position: fixed;
+bottom: 0;
+width: 99%;
+background-color: #000;
+text-align: center;
+}

@@ -1,0 +1,23 @@
+section {
+    padding: 30px 40px;
+    margin: 40px;
+}
+
+.col-12 h1 {
+    text-align: center;
+    letter-spacing: 5px;
+    margin-bottom: 30px;
+}
+
+.card img{
+    height: 220px;
+    object-fit: cover;
+}
+
+.card{
+    margin-bottom: 50px;;
+}
+
+.card-body a{
+    background-color: #000;
+}
